@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="ca">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Formulari de l’annex de la sol·licitud del PMII, connectat amb l’Studio Llei de Barris.">
+  <title>Formulari Annex PMII · Llei de Barris</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --navy:#123d63; --blue:#1d72a9; --blue-dark:#155a86; --sky:#eaf6fb;
+      --line:#cbd9e3; --ink:#183044; --muted:#65798a; --ok:#15845e;
+      --warn:#9a6810; --danger:#b83232; --paper:#fff; --page:#edf2f5;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--page);color:var(--ink);font:15px/1.45 Inter,Segoe UI,Arial,sans-serif}
+    button,input,select,textarea{font:inherit}
+    button{cursor:pointer}
+    button:disabled{cursor:not-allowed;opacity:.55}
+    .shell{max-width:1180px;margin:32px auto;background:var(--paper);border-radius:16px;box-shadow:0 14px 45px #17344a20;overflow:hidden}
+    header{display:flex;justify-content:space-between;gap:20px;align-items:center;padding:23px 34px;background:var(--navy);color:#fff}
+    .brand{display:flex;gap:12px;align-items:center}.mark{display:grid;place-items:center;width:36px;height:36px;border:2px solid #9bd9eb;border-radius:8px;color:#9bd9eb;font-weight:800}
+    .eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#b9d7e9}.brand h1{margin:1px 0 0;font-size:19px}.connection{text-align:right;font-size:13px;color:#d6e8f2}.connection strong{display:block;color:#fff}
+    .progress{display:flex;padding:22px 34px 5px;background:#fff}.step-button{flex:1;position:relative;border:0;background:transparent;color:#7a8b98;text-align:left;padding:0 10px 0 0;font-size:12px;font-weight:650}
+    .step-button:before{content:"";display:block;width:23px;height:23px;border-radius:50%;background:#dce7ed;margin-bottom:7px}
+    .step-button:not(:last-child):after{content:"";position:absolute;left:23px;top:11px;width:calc(100% - 23px);height:3px;background:#dce7ed}
+    .step-button.active{color:var(--blue)}.step-button.active:before{background:var(--blue);box-shadow:inset 0 0 0 6px #d9f0fa}
+    .step-button.done{color:var(--ok)}.step-button.done:before,.step-button.done:after{background:var(--ok)}
+    main{padding:20px 34px 34px}.intro{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:1px solid var(--line);padding:0 0 18px;margin-bottom:22px;gap:20px}.intro h2{margin:0;font-size:24px}.intro p{margin:5px 0 0;color:var(--muted)}
+    .save-state{color:var(--ok);font-size:13px;font-weight:650;text-align:right}.save-state.warn{color:var(--warn)}
+    .studio-bar{display:flex;align-items:flex-end;gap:12px;padding:14px 16px;margin-bottom:18px;border:1px solid #b9d8e7;border-radius:10px;background:var(--sky)}
+    .studio-bar label{flex:1;font-size:13px;font-weight:700}.studio-bar select{margin-top:5px}
+    .page[hidden]{display:none}.card{border:1px solid var(--line);border-radius:12px;margin:16px 0;overflow:hidden}.card-head{display:flex;align-items:center;gap:12px;padding:14px 18px;background:#f7fafc}
+    .number{background:var(--blue);color:#fff;border-radius:50%;width:26px;height:26px;display:grid;place-items:center;font-size:13px;font-weight:750;flex:0 0 auto}.card h3{margin:0;font-size:16px}.card-head span{color:var(--muted);font-size:13px}.card-body{padding:20px 18px}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.field label,.question{display:block;font-weight:650;font-size:13px;margin-bottom:7px}.hint{font-weight:400;color:var(--muted);margin-left:5px}
+    .input,select,textarea{width:100%;border:1px solid #aebfcb;border-radius:7px;background:#fff;padding:11px 12px;color:var(--ink)}.input:focus,select:focus,textarea:focus{outline:3px solid #bde9f6;border-color:var(--blue)}textarea{min-height:120px;resize:vertical}
+    .section-note{margin:0 0 15px;padding:10px 12px;background:var(--sky);border-left:3px solid #56a9c6;border-radius:4px;color:#34566b;font-size:13px}
+    .plans{display:grid;grid-template-columns:repeat(2,1fr);gap:10px 28px}.plan{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid #e8eef2}.plan>span{font-size:14px}
+    .choice{display:flex;border:1px solid #b8c7d1;border-radius:6px;overflow:hidden;flex:0 0 auto}.choice label{position:relative;margin:0}.choice input{position:absolute;opacity:0;pointer-events:none}.choice span{display:block;padding:7px 11px;color:#708291;font-size:12px;font-weight:700}.choice input:checked+span{background:#d9f3e8;color:#0c7451}.choice input:focus-visible+span{outline:3px solid #bde9f6;outline-offset:-3px}
+    .alert{display:flex;gap:9px;padding:11px 13px;border-radius:7px;background:#fff7e3;color:#6f5211;font-size:13px;margin-top:16px}.alert.error{background:#fff0f0;color:#8d2929}.alert b{font-size:15px}
+    .iban{display:flex;gap:7px;align-items:center}.iban .prefix{padding:11px 9px;border:1px solid #aebfcb;border-radius:7px;background:#f4f7f9;font-weight:700;color:var(--navy)}.iban input{min-width:0;font:600 17px/1 monospace;letter-spacing:2px}.iban-help{font-size:13px;color:var(--muted);margin:9px 0 0}.field-error{display:none;color:var(--danger);font-size:12px;margin:7px 0 0}.invalid .field-error{display:block}.invalid .input,.invalid select,.invalid textarea{border-color:var(--danger)}
+    .review-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.review-card{border:1px solid var(--line);border-radius:10px;padding:16px}.review-card h3{margin:0 0 12px;font-size:15px}.review-list{display:grid;grid-template-columns:minmax(120px,.7fr) 1.3fr;gap:7px 14px;margin:0}.review-list dt{color:var(--muted)}.review-list dd{margin:0;font-weight:600;overflow-wrap:anywhere}.review-card.full{grid-column:1/-1}
+    .missing{margin-top:16px;padding:13px;border-radius:8px;background:#fff0f0;color:#8d2929}.missing.ok{background:#e7f6ef;color:#0c7451}.missing ul{margin:7px 0 0;padding-left:20px}
+    .footer{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:25px}.required{color:#c63e3e}.actions{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:8px}.btn{border-radius:7px;padding:11px 16px;font-weight:700;border:1px solid var(--blue);background:#fff;color:var(--blue)}.btn:hover{background:#eef8fc}.btn.primary{background:var(--blue);color:#fff}.btn.primary:hover{background:var(--blue-dark)}.btn.subtle{border-color:#aebfcb;color:#536b7c}.summary{font-size:13px;color:var(--muted)}
+    .toast{position:fixed;left:50%;bottom:25px;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#173d58;color:#fff;padding:11px 16px;border-radius:8px;box-shadow:0 10px 30px #102c4050;transition:.2s;z-index:10}.toast.show{opacity:1;transform:translate(-50%,0)}.toast.error{background:#9c3030}
+    .visually-hidden{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+    @media(max-width:760px){.shell{margin:0;border-radius:0}.grid,.plans,.review-grid{grid-template-columns:1fr}header,main{padding-left:18px;padding-right:18px}.progress{padding-left:18px;padding-right:18px}.intro,.studio-bar,.footer{align-items:stretch;flex-direction:column}.connection{text-align:left}.review-card.full{grid-column:auto}.step-button{font-size:0}.step-button:after{display:block}.actions{justify-content:flex-start}}
+    @media print{body{background:#fff}.shell{margin:0;box-shadow:none}.progress,.studio-bar,.footer,.save-state,.connection{display:none!important}.page{display:none!important}#page-review{display:block!important}main{padding:10px}.review-card{break-inside:avoid}}
+  </style>
+</head>
+<body>
+  <section class="shell">
+    <header>
+      <div class="brand"><div class="mark">LB</div><div><div class="eyebrow">Llei de barris · Fons de recuperació urbana</div><h1>Formulari de l’annex PMII</h1></div></div>
+      <div class="connection" id="connection"><strong>Mode independent</strong>Desament local en aquest navegador</div>
+    </header>
+    <nav class="progress" aria-label="Passos del formulari">
+      <button class="step-button active" type="button" data-step="0">Dades generals</button>
+      <button class="step-button" type="button" data-step="1">Planificació municipal</button>
+      <button class="step-button" type="button" data-step="2">Dades bancàries</button>
+      <button class="step-button" type="button" data-step="3">Revisió i enviament</button>
+    </nav>
+    <main>
+      <div class="intro"><div><h2 id="page-title">Informació del programa</h2><p id="page-description">Completa les dades bàsiques del PMII i de l’àrea d’atenció especial.</p></div><div class="save-state" id="save-state">● Esborrany desat automàticament</div></div>
+      <div class="studio-bar" id="studio-bar" hidden>
+        <label>Versió de partida
+          <select id="version-select"><option value="">Versió actual</option></select>
+        </label>
+        <button class="btn subtle" id="reload-version" type="button">Carrega la versió</button>
+      </div>
+
+      <form id="annex-form" novalidate>
+        <section class="page" id="page-general" data-page="0">
+          <section class="card"><div class="card-head"><div class="number">1</div><div><h3>Identificació del programa</h3><span>Dades bàsiques del PMII i de l’àrea d’atenció especial</span></div></div>
+            <div class="card-body"><div class="grid">
+              <div class="field" data-field="pmiiTitle"><label for="pmiiTitle">Títol del programa memòria d’intervenció integral (PMII) <span class="required">*</span></label><input id="pmiiTitle" name="pmiiTitle" class="input" autocomplete="off" placeholder="Ex.: PMII de transformació urbana del…"><p class="field-error">Cal indicar el títol del PMII.</p></div>
+              <div class="field" data-field="aaeName"><label for="aaeName">Nom de l’àrea d’atenció especial (AAE) <span class="required">*</span></label><input id="aaeName" name="aaeName" class="input" autocomplete="off" placeholder="Ex.: Barri de…"><p class="field-error">Cal indicar el nom de l’AAE.</p></div>
+            </div></div>
+          </section>
+        </section>
+
+        <section class="page" id="page-plans" data-page="1" hidden>
+          <section class="card"><div class="card-head"><div class="number">2</div><div><h3>Planificació i experiència municipal</h3><span>Plans vigents i antecedents vinculats a l’AAE</span></div></div>
+            <div class="card-body">
+              <div class="grid" style="margin-bottom:18px"><div class="field" data-field="urbanAgenda"><label for="urbanAgenda">El municipi disposa d’Agenda Urbana Local? <span class="required">*</span></label><select id="urbanAgenda" name="urbanAgenda"><option value="">Selecciona una opció</option><option value="si">Sí</option><option value="no">No</option></select><p class="field-error">Cal seleccionar una opció.</p></div></div>
+              <p class="section-note">Indica si cada instrument està vigent. Si no existeix o no és vigent, selecciona «No».</p>
+              <div class="plans" id="plans"></div>
+              <div class="field" style="margin-top:20px"><label for="similarExperience">Experiència en altres programes similars a l’AAE <span class="hint">(passats, en execució o en planificació)</span></label><textarea id="similarExperience" name="similarExperience" placeholder="Indica el nom del programa, període, àmbit territorial i vinculació amb l’AAE. Si no n’hi ha, escriu «No aplica»."></textarea></div>
+            </div>
+          </section>
+        </section>
+
+        <section class="page" id="page-bank" data-page="2" hidden>
+          <section class="card"><div class="card-head"><div class="number">3</div><div><h3>Compte bancari</h3><span>Dades per al pagament del Fons</span></div></div>
+            <div class="card-body"><div class="field" data-field="iban"><label for="iban">IBAN del compte de titularitat municipal <span class="required">*</span></label><div class="iban"><span class="prefix">ES</span><input id="iban" name="iban" class="input" inputmode="numeric" autocomplete="off" maxlength="27" placeholder="00 0000 0000 0000 0000 0000"></div><p class="iban-help">Introdueix els 22 dígits. El formulari en verificarà l’estructura i els dígits de control.</p><p class="field-error">L’IBAN no és vàlid.</p></div>
+              <div class="alert"><b>i</b><div>Les dades es desen només al navegador mentre treballes. Quan s’envien a l’Studio, queden incorporades a la versió del projecte.</div></div>
+            </div>
+          </section>
+        </section>
+
+        <section class="page" id="page-review" data-page="3" hidden>
+          <section class="card"><div class="card-head"><div class="number">4</div><div><h3>Revisió</h3><span>Comprova les dades abans de crear una versió a l’Studio</span></div></div>
+            <div class="card-body">
+              <div class="review-grid">
+                <article class="review-card"><h3>Programa</h3><dl class="review-list" id="review-program"></dl></article>
+                <article class="review-card"><h3>Planificació</h3><dl class="review-list" id="review-plans"></dl></article>
+                <article class="review-card full"><h3>Experiència i compte</h3><dl class="review-list" id="review-other"></dl></article>
+              </div>
+              <div class="missing" id="missing"></div>
+            </div>
+          </section>
+        </section>
+      </form>
+
+      <div class="footer">
+        <div class="summary" id="summary">Pas 1 de 4</div>
+        <div class="actions">
+          <button class="btn subtle" type="button" id="import-json">Importa JSON</button>
+          <input class="visually-hidden" type="file" id="json-file" accept=".json,application/json">
+          <button class="btn subtle" type="button" id="export-json">Baixa JSON</button>
+          <button class="btn" type="button" id="previous" hidden>← Enrere</button>
+          <button class="btn primary" type="button" id="next">Continua →</button>
+          <button class="btn" type="button" id="print" hidden>Imprimeix / PDF</button>
+          <button class="btn primary" type="button" id="send" hidden>Enviar a Studio</button>
+        </div>
+      </div>
+    </main>
+  </section>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script>
+    (() => {
+      "use strict";
+      const APP_VERSION = "1.0.0";
+      const params = new URLSearchParams(location.search);
+      const config = {
+        projectId: params.get("project") || "",
+        projectName: params.get("projectName") || "",
+        municipalityCode: params.get("municipalityCode") || "",
+        studioApi: params.get("studioApi") || "",
+        studioSession: params.get("studioSession") || "",
+        studioOrigin: params.get("studioOrigin") || ""
+      };
+      const connected = Boolean(config.projectId && config.studioApi && config.studioSession);
+      const planDefinitions = [
+        ["localHousingPlan","Pla local d’habitatge"],["paesc","PAESC"],
+        ["airQualityPlan","Pla de qualitat de l’aire"],["wastePreventionPlan","Pla local de prevenció de residus municipals"],
+        ["mobilityPlan","Pla de mobilitat"],["sanitationMasterPlan","Pla director de sanejament integral"],
+        ["communityActionPlan","Pla local d’acció comunitària inclusiva"],["accessibilityPlan","Pla d’accessibilitat"],
+        ["equalityPlan","Pla d’igualtat"],["lgtbiProtocol","Protocol LGTBI"]
+      ];
+      const emptyData = () => ({
+        schemaVersion: 1,
+        formVersion: APP_VERSION,
+        project: { id: config.projectId, name: config.projectName, municipalityCode: config.municipalityCode },
+        pmiiTitle: "", aaeName: "", urbanAgenda: "", plans: Object.fromEntries(planDefinitions.map(([key]) => [key,""])),
+        similarExperience: "", iban: "", updatedAt: new Date().toISOString()
+      });
+      const storageKey = "llb-annex-pmii:" + (config.projectId || config.municipalityCode || "standalone");
+      let data = emptyData();
+      let step = 0;
+      let studioVersions = [];
+      let saveTimer = 0;
+
+      const $ = (selector) => document.querySelector(selector);
+      const $$ = (selector) => [...document.querySelectorAll(selector)];
+      const html = (value) => String(value ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+      const textValue = (value) => String(value ?? "").trim();
+      const yesNo = (value) => value === "si" ? "Sí" : value === "no" ? "No" : "—";
+      const toast = (message, isError = false) => {
+        const node = $("#toast"); node.textContent = message; node.className = "toast show" + (isError ? " error" : "");
+        clearTimeout(node._timer); node._timer = setTimeout(() => node.className = "toast", 3500);
+      };
+      const normalizeData = (source) => {
+        const base = emptyData();
+        const incoming = source && typeof source === "object" ? source : {};
+        const incomingPlans = incoming.plans && typeof incoming.plans === "object" ? incoming.plans : {};
+        return {
+          ...base, ...incoming,
+          project: { ...base.project, ...(incoming.project || {}) },
+          plans: Object.fromEntries(planDefinitions.map(([key]) => [key, ["si","no"].includes(incomingPlans[key]) ? incomingPlans[key] : ""])),
+          pmiiTitle: textValue(incoming.pmiiTitle), aaeName: textValue(incoming.aaeName),
+          urbanAgenda: ["si","no"].includes(incoming.urbanAgenda) ? incoming.urbanAgenda : "",
+          similarExperience: textValue(incoming.similarExperience),
+          iban: String(incoming.iban || "").replace(/\D/g,"").slice(0,22),
+          formVersion: APP_VERSION
+        };
+      };
+      const renderPlanInputs = () => {
+        $("#plans").innerHTML = planDefinitions.map(([key,label]) => `
+          <div class="plan"><span>${html(label)}</span><div class="choice" role="radiogroup" aria-label="${html(label)}">
+            <label><input type="radio" name="plan-${key}" value="si"><span>Sí</span></label>
+            <label><input type="radio" name="plan-${key}" value="no"><span>No</span></label>
+          </div></div>`).join("");
+      };
+      const fillForm = () => {
+        $("#pmiiTitle").value = data.pmiiTitle;
+        $("#aaeName").value = data.aaeName;
+        $("#urbanAgenda").value = data.urbanAgenda;
+        $("#similarExperience").value = data.similarExperience;
+        $("#iban").value = formatIbanDigits(data.iban);
+        planDefinitions.forEach(([key]) => {
+          const radio = document.querySelector(`input[name="plan-${key}"][value="${data.plans[key]}"]`);
+          if (radio) radio.checked = true;
+        });
+        clearValidation();
+      };
+      const readForm = () => {
+        data.pmiiTitle = textValue($("#pmiiTitle").value);
+        data.aaeName = textValue($("#aaeName").value);
+        data.urbanAgenda = $("#urbanAgenda").value;
+        data.similarExperience = textValue($("#similarExperience").value);
+        data.iban = $("#iban").value.replace(/\D/g,"").slice(0,22);
+        planDefinitions.forEach(([key]) => {
+          data.plans[key] = document.querySelector(`input[name="plan-${key}"]:checked`)?.value || "";
+        });
+        data.project = { ...data.project, id: config.projectId || data.project.id, name: config.projectName || data.project.name, municipalityCode: config.municipalityCode || data.project.municipalityCode };
+        data.updatedAt = new Date().toISOString();
+        return data;
+      };
+      const saveLocal = () => {
+        readForm();
+        localStorage.setItem(storageKey, JSON.stringify(data));
+        $("#save-state").textContent = "● Esborrany desat automàticament";
+        $("#save-state").className = "save-state";
+      };
+      const scheduleSave = () => {
+        $("#save-state").textContent = "● Desant…"; $("#save-state").className = "save-state warn";
+        clearTimeout(saveTimer); saveTimer = setTimeout(saveLocal, 250);
+      };
+      const formatIbanDigits = (digits) => String(digits || "").replace(/\D/g,"").slice(0,22).replace(/(.{4})/g,"$1 ").trim();
+      const validIban = (digits) => {
+        const iban = "ES" + String(digits || "").replace(/\D/g,"");
+        if (!/^ES\d{22}$/.test(iban)) return false;
+        const rearranged = iban.slice(4) + "1428" + iban.slice(2,4);
+        let remainder = 0;
+        for (const digit of rearranged) remainder = (remainder * 10 + Number(digit)) % 97;
+        return remainder === 1;
+      };
+      const missingFields = () => {
+        readForm();
+        const missing = [];
+        if (!data.pmiiTitle) missing.push("Títol del PMII");
+        if (!data.aaeName) missing.push("Nom de l’AAE");
+        if (!data.urbanAgenda) missing.push("Agenda Urbana Local");
+        planDefinitions.forEach(([key,label]) => { if (!data.plans[key]) missing.push(label); });
+        if (!validIban(data.iban)) missing.push("IBAN vàlid");
+        return missing;
+      };
+      const clearValidation = () => $$(".invalid").forEach(node => node.classList.remove("invalid"));
+      const validatePage = (page) => {
+        clearValidation(); readForm(); let valid = true;
+        const invalid = (name) => { document.querySelector(`[data-field="${name}"]`)?.classList.add("invalid"); valid = false; };
+        if (page === 0) { if (!data.pmiiTitle) invalid("pmiiTitle"); if (!data.aaeName) invalid("aaeName"); }
+        if (page === 1 && !data.urbanAgenda) invalid("urbanAgenda");
+        if (page === 2 && !validIban(data.iban)) invalid("iban");
+        return valid;
+      };
+      const renderReview = () => {
+        readForm();
+        $("#review-program").innerHTML = `<dt>Projecte Studio</dt><dd>${html(data.project.name || "No vinculat")}</dd><dt>Títol PMII</dt><dd>${html(data.pmiiTitle || "—")}</dd><dt>AAE</dt><dd>${html(data.aaeName || "—")}</dd><dt>Agenda Urbana</dt><dd>${yesNo(data.urbanAgenda)}</dd>`;
+        $("#review-plans").innerHTML = planDefinitions.map(([key,label]) => `<dt>${html(label)}</dt><dd>${yesNo(data.plans[key])}</dd>`).join("");
+        $("#review-other").innerHTML = `<dt>Experiència</dt><dd>${html(data.similarExperience || "—")}</dd><dt>IBAN</dt><dd>${data.iban ? "ES•••• •••• •••• •••• " + html(data.iban.slice(-4)) : "—"}</dd>`;
+        const missing = missingFields();
+        $("#missing").className = "missing" + (missing.length ? "" : " ok");
+        $("#missing").innerHTML = missing.length ? `<strong>Queden ${missing.length} dades per completar:</strong><ul>${missing.map(item => `<li>${html(item)}</li>`).join("")}</ul>` : "<strong>La informació obligatòria està completa.</strong>";
+        $("#send").disabled = !connected || missing.length > 0;
+        $("#send").title = connected ? (missing.length ? "Completa les dades obligatòries" : "") : "Obre el formulari des de l’Studio per enviar-lo";
+      };
+      const showStep = (nextStep) => {
+        step = Math.max(0, Math.min(3, nextStep));
+        $$(".page").forEach((node,index) => node.hidden = index !== step);
+        $$(".step-button").forEach((node,index) => { node.classList.toggle("active", index === step); node.classList.toggle("done", index < step); });
+        const titles = [["Informació del programa","Completa les dades bàsiques del PMII i de l’àrea d’atenció especial."],["Planificació municipal","Indica els instruments vigents i l’experiència municipal vinculada a l’AAE."],["Dades bancàries","Informa el compte municipal destinat al pagament del Fons."],["Revisió i enviament","Revisa el contingut i crea una nova versió a l’Studio."]];
+        $("#page-title").textContent = titles[step][0]; $("#page-description").textContent = titles[step][1];
+        $("#summary").textContent = `Pas ${step + 1} de 4`;
+        $("#previous").hidden = step === 0; $("#next").hidden = step === 3; $("#print").hidden = step !== 3; $("#send").hidden = step !== 3;
+        if (step === 3) renderReview();
+        scrollTo({top:0,behavior:"smooth"});
+      };
+      const studioFetch = async (url, options = {}) => {
+        const response = await fetch(url, { ...options, headers: { "content-type":"application/json","x-studio-session":config.studioSession,...(options.headers || {}) }, cache:"no-store" });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(result.error || "No s’ha pogut connectar amb l’Studio.");
+        return result;
+      };
+      const loadStudioVersion = async (versionId = "") => {
+        if (!connected) return;
+        const url = new URL(config.studioApi);
+        url.searchParams.set("integration","annex"); url.searchParams.set("projectId",config.projectId);
+        if (versionId) url.searchParams.set("versionId",versionId);
+        const result = await studioFetch(url);
+        studioVersions = result.versions || [];
+        const select = $("#version-select");
+        select.innerHTML = `<option value="">Versió actual</option>` + studioVersions.map(version => `<option value="${html(version.id)}">${html(version.version_label)} · v${version.version_number}</option>`).join("");
+        if (versionId) select.value = versionId;
+        if (result.selectedVersion?.data) {
+          data = normalizeData(result.selectedVersion.data);
+          fillForm(); saveLocal(); toast(`S’ha carregat ${result.selectedVersion.version_label || "la versió seleccionada"}.`);
+        }
+      };
+      const exportJson = () => {
+        saveLocal();
+        const blob = new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+        const link = document.createElement("a"); link.href = URL.createObjectURL(blob);
+        link.download = `annex-pmii-${(data.project.name || data.aaeName || "projecte").normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/gi,"-").replace(/^-|-$/g,"").toLowerCase() || "projecte"}.json`;
+        link.click(); setTimeout(() => URL.revokeObjectURL(link.href),1000);
+      };
+      const importJson = async (file) => {
+        try {
+          const parsed = JSON.parse(await file.text());
+          data = normalizeData(parsed); fillForm(); saveLocal(); showStep(0); toast("S’han importat les dades.");
+        } catch { toast("El fitxer JSON no és vàlid.",true); }
+      };
+      const sendStudio = async () => {
+        const missing = missingFields(); if (missing.length || !connected) { renderReview(); return; }
+        const button = $("#send"); button.disabled = true; button.textContent = "Enviant…";
+        try {
+          const submissionId = crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+          const result = await studioFetch(config.studioApi,{method:"POST",body:JSON.stringify({
+            action:"syncModule", projectId:config.projectId, moduleKey:"annex", status:"complet",
+            itemCount:3 + planDefinitions.length, warningCount:0, summary:`Annex PMII complet · ${data.aaeName}`,
+            source:"Formulari Annex PMII v" + APP_VERSION, data, externalSubmissionId:submissionId,
+            versionLabel:`Annex PMII · ${new Intl.DateTimeFormat("ca-ES",{dateStyle:"short",timeStyle:"short"}).format(new Date())}`,
+            submissionType:"annex_pmii"
+          })});
+          const synced = result.syncedVersion;
+          toast(synced ? `Versió ${synced.versionNumber} creada a l’Studio.` : "S’ha enviat a l’Studio.");
+          if (config.studioOrigin && window.opener) window.opener.postMessage({type:"LLB_STUDIO_REFRESH",projectId:config.projectId,moduleKey:"annex",source:"Formulari Annex PMII"},config.studioOrigin);
+          await loadStudioVersion();
+        } catch (error) { toast(error instanceof Error ? error.message : "No s’ha pogut enviar.",true); }
+        finally { button.disabled = false; button.textContent = "Enviar a Studio"; renderReview(); }
+      };
+
+      renderPlanInputs();
+      try { const saved = localStorage.getItem(storageKey); if (saved) data = normalizeData(JSON.parse(saved)); } catch {}
+      fillForm();
+      if (connected) {
+        $("#connection").innerHTML = `<strong>Connectat amb l’Studio</strong>${html(config.projectName || config.projectId)}`;
+        $("#studio-bar").hidden = false;
+        loadStudioVersion().catch(error => toast(error.message,true));
+      }
+      $("#annex-form").addEventListener("input", event => {
+        if (event.target.id === "iban") event.target.value = formatIbanDigits(event.target.value);
+        scheduleSave();
+      });
+      $("#annex-form").addEventListener("change", scheduleSave);
+      $$(".step-button").forEach(node => node.addEventListener("click",() => showStep(Number(node.dataset.step))));
+      $("#next").addEventListener("click",() => { if (validatePage(step)) showStep(step + 1); else toast("Revisa els camps marcats.",true); });
+      $("#previous").addEventListener("click",() => showStep(step - 1));
+      $("#export-json").addEventListener("click",exportJson);
+      $("#import-json").addEventListener("click",() => $("#json-file").click());
+      $("#json-file").addEventListener("change",event => { const file = event.target.files?.[0]; if (file) importJson(file); event.target.value = ""; });
+      $("#reload-version").addEventListener("click",() => loadStudioVersion($("#version-select").value).catch(error => toast(error.message,true)));
+      $("#print").addEventListener("click",() => { renderReview(); window.print(); });
+      $("#send").addEventListener("click",sendStudio);
+      addEventListener("beforeunload",saveLocal);
+      showStep(0);
+    })();
+  </script>
+</body>
+</html>
