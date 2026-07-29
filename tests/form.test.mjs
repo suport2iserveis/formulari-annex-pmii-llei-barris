@@ -27,12 +27,26 @@ test("conserva el contracte segur amb l’Studio", () => {
   assert.doesNotMatch(html, /STUDIO_SYNC_KEY/);
 });
 
-test("inclou desament local, JSON, impressió i validació IBAN", () => {
+test("inclou desament local, JSON, impressió i requisit de 22 dígits", () => {
   assert.match(html, /localStorage/);
   assert.match(html, /exportJson/);
   assert.match(html, /importJson/);
   assert.match(html, /window\.print/);
-  assert.match(html, /remainder === 1/);
+  assert.match(html, /\\d\{22\}/);
+  assert.match(html, /No se’n comprovarà la validesa bancària/);
+  assert.doesNotMatch(html, /remainder === 1|% 97|dígits de control/);
+});
+
+test("aplica la identitat visual d’Iserveis i Barry", () => {
+  assert.match(html, /assets\/iserveis-logo\.png/);
+  assert.match(html, /assets\/barry-happy\.png/);
+  assert.match(html, /--barry:/);
+});
+
+test("mou l’experiència al resum de planificació i elimina la casella de versions", () => {
+  assert.match(html, /review-plans[\s\S]*Experiència/);
+  assert.match(html, /<h3>Compte bancari<\/h3>/);
+  assert.doesNotMatch(html, /id="version-select"|id="reload-version"|Versió de partida/);
 });
 
 test("l’script principal té sintaxi JavaScript vàlida", () => {

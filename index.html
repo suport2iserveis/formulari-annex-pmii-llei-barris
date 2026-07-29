@@ -8,51 +8,56 @@
   <style>
     :root {
       color-scheme: light;
-      --navy:#123d63; --blue:#1d72a9; --blue-dark:#155a86; --sky:#eaf6fb;
-      --line:#cbd9e3; --ink:#183044; --muted:#65798a; --ok:#15845e;
-      --warn:#9a6810; --danger:#b83232; --paper:#fff; --page:#edf2f5;
+      --navy:#292837; --blue:#7776bd; --blue-dark:#5d5b9d; --sky:#f0efff;
+      --line:#d9d8e9; --ink:#292837; --muted:#6e6d80; --ok:#2f846b;
+      --warn:#9a6810; --danger:#b8324a; --paper:#fff; --page:#f4f3f8;
+      --barry:#8e8dca; --barry-soft:#e7e6fa; --barry-dark:#292837;
     }
     *{box-sizing:border-box}
     body{margin:0;background:var(--page);color:var(--ink);font:15px/1.45 Inter,Segoe UI,Arial,sans-serif}
     button,input,select,textarea{font:inherit}
     button{cursor:pointer}
     button:disabled{cursor:not-allowed;opacity:.55}
-    .shell{max-width:1180px;margin:32px auto;background:var(--paper);border-radius:16px;box-shadow:0 14px 45px #17344a20;overflow:hidden}
-    header{display:flex;justify-content:space-between;gap:20px;align-items:center;padding:23px 34px;background:var(--navy);color:#fff}
-    .brand{display:flex;gap:12px;align-items:center}.mark{display:grid;place-items:center;width:36px;height:36px;border:2px solid #9bd9eb;border-radius:8px;color:#9bd9eb;font-weight:800}
-    .eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#b9d7e9}.brand h1{margin:1px 0 0;font-size:19px}.connection{text-align:right;font-size:13px;color:#d6e8f2}.connection strong{display:block;color:#fff}
+    .shell{max-width:1180px;margin:32px auto;background:var(--paper);border:1px solid #e3e1ed;border-radius:22px;box-shadow:0 18px 55px #2928371c;overflow:hidden}
+    header{display:flex;justify-content:space-between;gap:24px;align-items:center;padding:18px 32px;background:linear-gradient(115deg,#f7f6ff 0%,#e7e6fa 60%,#d9d8f4 100%);color:var(--ink);border-bottom:1px solid #d8d6eb}
+    .brand{display:flex;gap:18px;align-items:center;min-width:0}.iserveis-link{display:flex;align-items:center;justify-content:center;width:150px;height:68px;padding:8px 12px;border-radius:15px;background:#fff;box-shadow:0 6px 18px #45435f16;flex:0 0 auto}.iserveis-logo{display:block;max-width:100%;max-height:100%;object-fit:contain}
+    .brand-copy{padding-left:18px;border-left:1px solid #c9c7df}.eyebrow{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:#6b6993}.brand h1{margin:3px 0 0;font-size:21px;color:var(--barry-dark)}.connection{text-align:right;font-size:13px;color:#5f5e75}.connection strong{display:block;color:var(--barry-dark)}
+    .barry-signature{display:flex;align-items:center;gap:10px;min-width:225px;justify-content:flex-end}.barry-signature img{display:block;width:52px;height:82px;object-fit:contain;filter:drop-shadow(0 7px 8px #34324722)}.barry-copy{padding:9px 12px;border:1px solid #c9c7e5;border-radius:14px 14px 4px 14px;background:#ffffffc9;color:#5c5a75;font-size:12px;line-height:1.35}.barry-copy strong{display:block;color:#35344a;font-size:13px}
     .progress{display:flex;padding:22px 34px 5px;background:#fff}.step-button{flex:1;position:relative;border:0;background:transparent;color:#7a8b98;text-align:left;padding:0 10px 0 0;font-size:12px;font-weight:650}
     .step-button:before{content:"";display:block;width:23px;height:23px;border-radius:50%;background:#dce7ed;margin-bottom:7px}
     .step-button:not(:last-child):after{content:"";position:absolute;left:23px;top:11px;width:calc(100% - 23px);height:3px;background:#dce7ed}
-    .step-button.active{color:var(--blue)}.step-button.active:before{background:var(--blue);box-shadow:inset 0 0 0 6px #d9f0fa}
+    .step-button.active{color:var(--blue-dark)}.step-button.active:before{background:var(--barry);box-shadow:inset 0 0 0 6px var(--barry-soft)}
     .step-button.done{color:var(--ok)}.step-button.done:before,.step-button.done:after{background:var(--ok)}
     main{padding:20px 34px 34px}.intro{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:1px solid var(--line);padding:0 0 18px;margin-bottom:22px;gap:20px}.intro h2{margin:0;font-size:24px}.intro p{margin:5px 0 0;color:var(--muted)}
     .save-state{color:var(--ok);font-size:13px;font-weight:650;text-align:right}.save-state.warn{color:var(--warn)}
     .studio-bar{display:flex;align-items:flex-end;gap:12px;padding:14px 16px;margin-bottom:18px;border:1px solid #b9d8e7;border-radius:10px;background:var(--sky)}
     .studio-bar label{flex:1;font-size:13px;font-weight:700}.studio-bar select{margin-top:5px}
-    .page[hidden]{display:none}.card{border:1px solid var(--line);border-radius:12px;margin:16px 0;overflow:hidden}.card-head{display:flex;align-items:center;gap:12px;padding:14px 18px;background:#f7fafc}
-    .number{background:var(--blue);color:#fff;border-radius:50%;width:26px;height:26px;display:grid;place-items:center;font-size:13px;font-weight:750;flex:0 0 auto}.card h3{margin:0;font-size:16px}.card-head span{color:var(--muted);font-size:13px}.card-body{padding:20px 18px}
+    .page[hidden]{display:none}.card{border:1px solid var(--line);border-radius:16px;margin:16px 0;overflow:hidden;box-shadow:0 5px 16px #2928370a}.card-head{display:flex;align-items:center;gap:12px;padding:15px 18px;background:linear-gradient(90deg,#f8f7ff,#f1f0fb)}
+    .number{background:var(--barry-dark);color:#fff;border:4px solid var(--barry-soft);border-radius:50%;width:32px;height:32px;display:grid;place-items:center;font-size:13px;font-weight:750;flex:0 0 auto}.card h3{margin:0;font-size:16px}.card-head span{color:var(--muted);font-size:13px}.card-body{padding:20px 18px}
     .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.field label,.question{display:block;font-weight:650;font-size:13px;margin-bottom:7px}.hint{font-weight:400;color:var(--muted);margin-left:5px}
-    .input,select,textarea{width:100%;border:1px solid #aebfcb;border-radius:7px;background:#fff;padding:11px 12px;color:var(--ink)}.input:focus,select:focus,textarea:focus{outline:3px solid #bde9f6;border-color:var(--blue)}textarea{min-height:120px;resize:vertical}
-    .section-note{margin:0 0 15px;padding:10px 12px;background:var(--sky);border-left:3px solid #56a9c6;border-radius:4px;color:#34566b;font-size:13px}
+    .input,select,textarea{width:100%;border:1px solid #bdbbd1;border-radius:10px;background:#fff;padding:11px 12px;color:var(--ink)}.input:focus,select:focus,textarea:focus{outline:3px solid #deddfa;border-color:var(--barry)}textarea{min-height:120px;resize:vertical}
+    .section-note{margin:0 0 15px;padding:11px 13px;background:var(--sky);border-left:4px solid var(--barry);border-radius:7px;color:#514f70;font-size:13px}
     .plans{display:grid;grid-template-columns:repeat(2,1fr);gap:10px 28px}.plan{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid #e8eef2}.plan>span{font-size:14px}
-    .choice{display:flex;border:1px solid #b8c7d1;border-radius:6px;overflow:hidden;flex:0 0 auto}.choice label{position:relative;margin:0}.choice input{position:absolute;opacity:0;pointer-events:none}.choice span{display:block;padding:7px 11px;color:#708291;font-size:12px;font-weight:700}.choice input:checked+span{background:#d9f3e8;color:#0c7451}.choice input:focus-visible+span{outline:3px solid #bde9f6;outline-offset:-3px}
+    .choice{display:flex;border:1px solid #c3c1d6;border-radius:9px;overflow:hidden;flex:0 0 auto}.choice label{position:relative;margin:0}.choice input{position:absolute;opacity:0;pointer-events:none}.choice span{display:block;padding:7px 11px;color:#716f85;font-size:12px;font-weight:700}.choice input:checked+span{background:var(--barry-soft);color:#4e4c82}.choice input:focus-visible+span{outline:3px solid #deddfa;outline-offset:-3px}
     .alert{display:flex;gap:9px;padding:11px 13px;border-radius:7px;background:#fff7e3;color:#6f5211;font-size:13px;margin-top:16px}.alert.error{background:#fff0f0;color:#8d2929}.alert b{font-size:15px}
     .iban{display:flex;gap:7px;align-items:center}.iban .prefix{padding:11px 9px;border:1px solid #aebfcb;border-radius:7px;background:#f4f7f9;font-weight:700;color:var(--navy)}.iban input{min-width:0;font:600 17px/1 monospace;letter-spacing:2px}.iban-help{font-size:13px;color:var(--muted);margin:9px 0 0}.field-error{display:none;color:var(--danger);font-size:12px;margin:7px 0 0}.invalid .field-error{display:block}.invalid .input,.invalid select,.invalid textarea{border-color:var(--danger)}
-    .review-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.review-card{border:1px solid var(--line);border-radius:10px;padding:16px}.review-card h3{margin:0 0 12px;font-size:15px}.review-list{display:grid;grid-template-columns:minmax(120px,.7fr) 1.3fr;gap:7px 14px;margin:0}.review-list dt{color:var(--muted)}.review-list dd{margin:0;font-weight:600;overflow-wrap:anywhere}.review-card.full{grid-column:1/-1}
+    .review-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.review-card{border:1px solid var(--line);border-radius:13px;padding:17px;background:#fff}.review-card h3{margin:0 0 12px;font-size:15px}.review-list{display:grid;grid-template-columns:minmax(120px,.7fr) 1.3fr;gap:7px 14px;margin:0}.review-list dt{color:var(--muted)}.review-list dd{margin:0;font-weight:600;overflow-wrap:anywhere}.review-card.full{grid-column:1/-1}
     .missing{margin-top:16px;padding:13px;border-radius:8px;background:#fff0f0;color:#8d2929}.missing.ok{background:#e7f6ef;color:#0c7451}.missing ul{margin:7px 0 0;padding-left:20px}
-    .footer{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:25px}.required{color:#c63e3e}.actions{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:8px}.btn{border-radius:7px;padding:11px 16px;font-weight:700;border:1px solid var(--blue);background:#fff;color:var(--blue)}.btn:hover{background:#eef8fc}.btn.primary{background:var(--blue);color:#fff}.btn.primary:hover{background:var(--blue-dark)}.btn.subtle{border-color:#aebfcb;color:#536b7c}.summary{font-size:13px;color:var(--muted)}
+    .footer{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:25px}.required{color:#c63e52}.actions{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:8px}.btn{border-radius:10px;padding:11px 16px;font-weight:700;border:1px solid var(--barry);background:#fff;color:var(--blue-dark)}.btn:hover{background:#f3f2ff}.btn.primary{background:var(--barry-dark);border-color:var(--barry-dark);color:#fff}.btn.primary:hover{background:#42405c}.btn.subtle{border-color:#bbb9cd;color:#5e5c72}.summary{font-size:13px;color:var(--muted)}
     .toast{position:fixed;left:50%;bottom:25px;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#173d58;color:#fff;padding:11px 16px;border-radius:8px;box-shadow:0 10px 30px #102c4050;transition:.2s;z-index:10}.toast.show{opacity:1;transform:translate(-50%,0)}.toast.error{background:#9c3030}
     .visually-hidden{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
-    @media(max-width:760px){.shell{margin:0;border-radius:0}.grid,.plans,.review-grid{grid-template-columns:1fr}header,main{padding-left:18px;padding-right:18px}.progress{padding-left:18px;padding-right:18px}.intro,.studio-bar,.footer{align-items:stretch;flex-direction:column}.connection{text-align:left}.review-card.full{grid-column:auto}.step-button{font-size:0}.step-button:after{display:block}.actions{justify-content:flex-start}}
+    @media(max-width:760px){.shell{margin:0;border-radius:0}.grid,.plans,.review-grid{grid-template-columns:1fr}header,main{padding-left:18px;padding-right:18px}.progress{padding-left:18px;padding-right:18px}.intro,.footer{align-items:stretch;flex-direction:column}.brand{gap:10px}.iserveis-link{width:105px;height:56px;padding:6px}.brand-copy{padding-left:10px}.brand h1{font-size:17px}.barry-signature{display:none}.connection{text-align:left}.review-card.full{grid-column:auto}.step-button{font-size:0}.step-button:after{display:block}.actions{justify-content:flex-start}}
     @media print{body{background:#fff}.shell{margin:0;box-shadow:none}.progress,.studio-bar,.footer,.save-state,.connection{display:none!important}.page{display:none!important}#page-review{display:block!important}main{padding:10px}.review-card{break-inside:avoid}}
   </style>
 </head>
 <body>
   <section class="shell">
     <header>
-      <div class="brand"><div class="mark">LB</div><div><div class="eyebrow">Llei de barris · Fons de recuperació urbana</div><h1>Formulari de l’annex PMII</h1></div></div>
-      <div class="connection" id="connection"><strong>Mode independent</strong>Desament local en aquest navegador</div>
+      <div class="brand">
+        <a class="iserveis-link" href="https://www.iserveis.cat/" target="_blank" rel="noreferrer" aria-label="Web d’Iserveis"><img class="iserveis-logo" src="assets/iserveis-logo.png" alt="iServeis"></a>
+        <div class="brand-copy"><div class="eyebrow">Llei de barris · Fons de recuperació urbana</div><h1>Formulari de l’annex PMII</h1></div>
+      </div>
+      <div class="barry-signature"><div class="barry-copy" id="connection"><strong>Mode independent</strong>Desament local en aquest navegador</div><img src="assets/barry-happy.png" alt="Barry, assistent de l’Studio"></div>
     </header>
     <nav class="progress" aria-label="Passos del formulari">
       <button class="step-button active" type="button" data-step="0">Dades generals</button>
@@ -62,13 +67,6 @@
     </nav>
     <main>
       <div class="intro"><div><h2 id="page-title">Informació del programa</h2><p id="page-description">Completa les dades bàsiques del PMII i de l’àrea d’atenció especial.</p></div><div class="save-state" id="save-state">● Esborrany desat automàticament</div></div>
-      <div class="studio-bar" id="studio-bar" hidden>
-        <label>Versió de partida
-          <select id="version-select"><option value="">Versió actual</option></select>
-        </label>
-        <button class="btn subtle" id="reload-version" type="button">Carrega la versió</button>
-      </div>
-
       <form id="annex-form" novalidate>
         <section class="page" id="page-general" data-page="0">
           <section class="card"><div class="card-head"><div class="number">1</div><div><h3>Identificació del programa</h3><span>Dades bàsiques del PMII i de l’àrea d’atenció especial</span></div></div>
@@ -92,7 +90,7 @@
 
         <section class="page" id="page-bank" data-page="2" hidden>
           <section class="card"><div class="card-head"><div class="number">3</div><div><h3>Compte bancari</h3><span>Dades per al pagament del Fons</span></div></div>
-            <div class="card-body"><div class="field" data-field="iban"><label for="iban">IBAN del compte de titularitat municipal <span class="required">*</span></label><div class="iban"><span class="prefix">ES</span><input id="iban" name="iban" class="input" inputmode="numeric" autocomplete="off" maxlength="27" placeholder="00 0000 0000 0000 0000 0000"></div><p class="iban-help">Introdueix els 22 dígits. El formulari en verificarà l’estructura i els dígits de control.</p><p class="field-error">L’IBAN no és vàlid.</p></div>
+            <div class="card-body"><div class="field" data-field="iban"><label for="iban">IBAN del compte de titularitat municipal <span class="required">*</span></label><div class="iban"><span class="prefix">ES</span><input id="iban" name="iban" class="input" inputmode="numeric" autocomplete="off" maxlength="27" placeholder="00 0000 0000 0000 0000 0000"></div><p class="iban-help">Introdueix els 22 dígits del compte. No se’n comprovarà la validesa bancària.</p><p class="field-error">Cal introduir exactament 22 dígits.</p></div>
               <div class="alert"><b>i</b><div>Les dades es desen només al navegador mentre treballes. Quan s’envien a l’Studio, queden incorporades a la versió del projecte.</div></div>
             </div>
           </section>
@@ -104,7 +102,7 @@
               <div class="review-grid">
                 <article class="review-card"><h3>Programa</h3><dl class="review-list" id="review-program"></dl></article>
                 <article class="review-card"><h3>Planificació</h3><dl class="review-list" id="review-plans"></dl></article>
-                <article class="review-card full"><h3>Experiència i compte</h3><dl class="review-list" id="review-other"></dl></article>
+                <article class="review-card full"><h3>Compte bancari</h3><dl class="review-list" id="review-other"></dl></article>
               </div>
               <div class="missing" id="missing"></div>
             </div>
@@ -130,7 +128,7 @@
   <script>
     (() => {
       "use strict";
-      const APP_VERSION = "1.0.0";
+      const APP_VERSION = "1.1.0";
       const params = new URLSearchParams(location.search);
       const config = {
         projectId: params.get("project") || "",
@@ -158,7 +156,6 @@
       const storageKey = "llb-annex-pmii:" + (config.projectId || config.municipalityCode || "standalone");
       let data = emptyData();
       let step = 0;
-      let studioVersions = [];
       let saveTimer = 0;
 
       const $ = (selector) => document.querySelector(selector);
@@ -228,14 +225,7 @@
         clearTimeout(saveTimer); saveTimer = setTimeout(saveLocal, 250);
       };
       const formatIbanDigits = (digits) => String(digits || "").replace(/\D/g,"").slice(0,22).replace(/(.{4})/g,"$1 ").trim();
-      const validIban = (digits) => {
-        const iban = "ES" + String(digits || "").replace(/\D/g,"");
-        if (!/^ES\d{22}$/.test(iban)) return false;
-        const rearranged = iban.slice(4) + "1428" + iban.slice(2,4);
-        let remainder = 0;
-        for (const digit of rearranged) remainder = (remainder * 10 + Number(digit)) % 97;
-        return remainder === 1;
-      };
+      const validIban = (digits) => /^\d{22}$/.test(String(digits || "").replace(/\D/g,""));
       const missingFields = () => {
         readForm();
         const missing = [];
@@ -243,7 +233,7 @@
         if (!data.aaeName) missing.push("Nom de l’AAE");
         if (!data.urbanAgenda) missing.push("Agenda Urbana Local");
         planDefinitions.forEach(([key,label]) => { if (!data.plans[key]) missing.push(label); });
-        if (!validIban(data.iban)) missing.push("IBAN vàlid");
+        if (!validIban(data.iban)) missing.push("IBAN de 22 dígits");
         return missing;
       };
       const clearValidation = () => $$(".invalid").forEach(node => node.classList.remove("invalid"));
@@ -258,8 +248,8 @@
       const renderReview = () => {
         readForm();
         $("#review-program").innerHTML = `<dt>Projecte Studio</dt><dd>${html(data.project.name || "No vinculat")}</dd><dt>Títol PMII</dt><dd>${html(data.pmiiTitle || "—")}</dd><dt>AAE</dt><dd>${html(data.aaeName || "—")}</dd><dt>Agenda Urbana</dt><dd>${yesNo(data.urbanAgenda)}</dd>`;
-        $("#review-plans").innerHTML = planDefinitions.map(([key,label]) => `<dt>${html(label)}</dt><dd>${yesNo(data.plans[key])}</dd>`).join("");
-        $("#review-other").innerHTML = `<dt>Experiència</dt><dd>${html(data.similarExperience || "—")}</dd><dt>IBAN</dt><dd>${data.iban ? "ES•••• •••• •••• •••• " + html(data.iban.slice(-4)) : "—"}</dd>`;
+        $("#review-plans").innerHTML = planDefinitions.map(([key,label]) => `<dt>${html(label)}</dt><dd>${yesNo(data.plans[key])}</dd>`).join("") + `<dt>Experiència</dt><dd>${html(data.similarExperience || "—")}</dd>`;
+        $("#review-other").innerHTML = `<dt>IBAN</dt><dd>${data.iban ? "ES•••• •••• •••• •••• " + html(data.iban.slice(-4)) : "—"}</dd>`;
         const missing = missingFields();
         $("#missing").className = "missing" + (missing.length ? "" : " ok");
         $("#missing").innerHTML = missing.length ? `<strong>Queden ${missing.length} dades per completar:</strong><ul>${missing.map(item => `<li>${html(item)}</li>`).join("")}</ul>` : "<strong>La informació obligatòria està completa.</strong>";
@@ -283,19 +273,14 @@
         if (!response.ok) throw new Error(result.error || "No s’ha pogut connectar amb l’Studio.");
         return result;
       };
-      const loadStudioVersion = async (versionId = "") => {
+      const loadStudioVersion = async () => {
         if (!connected) return;
         const url = new URL(config.studioApi);
         url.searchParams.set("integration","annex"); url.searchParams.set("projectId",config.projectId);
-        if (versionId) url.searchParams.set("versionId",versionId);
         const result = await studioFetch(url);
-        studioVersions = result.versions || [];
-        const select = $("#version-select");
-        select.innerHTML = `<option value="">Versió actual</option>` + studioVersions.map(version => `<option value="${html(version.id)}">${html(version.version_label)} · v${version.version_number}</option>`).join("");
-        if (versionId) select.value = versionId;
         if (result.selectedVersion?.data) {
           data = normalizeData(result.selectedVersion.data);
-          fillForm(); saveLocal(); toast(`S’ha carregat ${result.selectedVersion.version_label || "la versió seleccionada"}.`);
+          fillForm(); saveLocal();
         }
       };
       const exportJson = () => {
@@ -336,7 +321,6 @@
       fillForm();
       if (connected) {
         $("#connection").innerHTML = `<strong>Connectat amb l’Studio</strong>${html(config.projectName || config.projectId)}`;
-        $("#studio-bar").hidden = false;
         loadStudioVersion().catch(error => toast(error.message,true));
       }
       $("#annex-form").addEventListener("input", event => {
@@ -350,7 +334,6 @@
       $("#export-json").addEventListener("click",exportJson);
       $("#import-json").addEventListener("click",() => $("#json-file").click());
       $("#json-file").addEventListener("change",event => { const file = event.target.files?.[0]; if (file) importJson(file); event.target.value = ""; });
-      $("#reload-version").addEventListener("click",() => loadStudioVersion($("#version-select").value).catch(error => toast(error.message,true)));
       $("#print").addEventListener("click",() => { renderReview(); window.print(); });
       $("#send").addEventListener("click",sendStudio);
       addEventListener("beforeunload",saveLocal);

@@ -2,17 +2,18 @@
 
 Repositori web estàtic del formulari de l’annex de la sol·licitud del PMII.
 Funciona de manera independent a GitHub Pages i també connectat amb
-**Studio Llei de Barris 3.8.0**.
+**Studio Llei de Barris 3.8.2**.
 
 ## Funcions
 
 - formulari accessible en quatre passos;
 - desament automàtic al navegador;
-- validació dels camps obligatoris i de l’IBAN;
+- requisit de 22 dígits per a l’IBAN, sense comprovació bancària;
 - revisió abans de l’enviament;
+- identitat visual integrada d’iServeis i Barry;
 - importació i exportació JSON;
 - impressió o desament del resum en PDF;
-- càrrega d’una versió anterior de l’Studio;
+- càrrega automàtica de la versió actual de l’Studio;
 - creació d’una versió nova i immutable a l’Studio.
 
 ## Publicació a GitHub Pages
