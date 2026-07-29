@@ -22,7 +22,9 @@ test("conté els quatre passos i tots els camps de la proposta", () => {
 test("conserva el contracte segur amb l’Studio", () => {
   assert.match(html, /x-studio-session/);
   assert.match(html, /integration","annex"/);
-  assert.match(html, /moduleKey:"annex"/);
+  assert.match(html, /iserveis-llb-annex-submission/);
+  assert.match(html, /SUBMISSION_ENDPOINT/);
+  assert.match(html, /requestSubmissionStatus/);
   assert.match(html, /LLB_STUDIO_REFRESH/);
   assert.doesNotMatch(html, /STUDIO_SYNC_KEY/);
 });
@@ -47,6 +49,17 @@ test("mou l’experiència al resum de planificació i elimina la casella de ver
   assert.match(html, /review-plans[\s\S]*Experiència/);
   assert.match(html, /<h3>Compte bancari<\/h3>/);
   assert.doesNotMatch(html, /id="version-select"|id="reload-version"|Versió de partida/);
+});
+
+test("envia a iServeis amb PDF i sincronització municipal", async () => {
+  assert.match(html, /Enviar a iServeis/);
+  assert.match(html, /suport2@iserveis\.cat/);
+  const receiver = await readFile(new URL("../google-apps-script.gs", import.meta.url), "utf8");
+  assert.match(receiver, /createAnnexPdf_/);
+  assert.match(receiver, /MimeType\.PDF/);
+  assert.match(receiver, /sendAnnexEmail_/);
+  assert.match(receiver, /moduleKey: 'annex'/);
+  assert.match(receiver, /'X-Studio-Session': studioSession/);
 });
 
 test("l’script principal té sintaxi JavaScript vàlida", () => {

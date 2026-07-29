@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="Formulari de l’annex de la sol·licitud del PMII, connectat amb l’Studio Llei de Barris.">
+  <meta name="description" content="Formulari municipal de l’annex de la sol·licitud del PMII, enviat a iServeis i connectat amb l’Studio Llei de Barris.">
   <title>Formulari Annex PMII · Llei de Barris</title>
   <style>
     :root {
@@ -91,13 +91,13 @@
         <section class="page" id="page-bank" data-page="2" hidden>
           <section class="card"><div class="card-head"><div class="number">3</div><div><h3>Compte bancari</h3><span>Dades per al pagament del Fons</span></div></div>
             <div class="card-body"><div class="field" data-field="iban"><label for="iban">IBAN del compte de titularitat municipal <span class="required">*</span></label><div class="iban"><span class="prefix">ES</span><input id="iban" name="iban" class="input" inputmode="numeric" autocomplete="off" maxlength="27" placeholder="00 0000 0000 0000 0000 0000"></div><p class="iban-help">Introdueix els 22 dígits del compte. No se’n comprovarà la validesa bancària.</p><p class="field-error">Cal introduir exactament 22 dígits.</p></div>
-              <div class="alert"><b>i</b><div>Les dades es desen només al navegador mentre treballes. Quan s’envien a l’Studio, queden incorporades a la versió del projecte.</div></div>
+              <div class="alert"><b>i</b><div>Les dades es desen només al navegador mentre treballes. En prémer «Enviar a iServeis», s’envien en PDF a suport2@iserveis.cat i s’incorporen al projecte corresponent de l’Studio.</div></div>
             </div>
           </section>
         </section>
 
         <section class="page" id="page-review" data-page="3" hidden>
-          <section class="card"><div class="card-head"><div class="number">4</div><div><h3>Revisió</h3><span>Comprova les dades abans de crear una versió a l’Studio</span></div></div>
+          <section class="card"><div class="card-head"><div class="number">4</div><div><h3>Revisió</h3><span>Comprova les dades abans d’enviar-les a iServeis</span></div></div>
             <div class="card-body">
               <div class="review-grid">
                 <article class="review-card"><h3>Programa</h3><dl class="review-list" id="review-program"></dl></article>
@@ -119,7 +119,7 @@
           <button class="btn" type="button" id="previous" hidden>← Enrere</button>
           <button class="btn primary" type="button" id="next">Continua →</button>
           <button class="btn" type="button" id="print" hidden>Imprimeix / PDF</button>
-          <button class="btn primary" type="button" id="send" hidden>Enviar a Studio</button>
+          <button class="btn primary" type="button" id="send" hidden>Enviar a iServeis</button>
         </div>
       </div>
     </main>
@@ -128,7 +128,9 @@
   <script>
     (() => {
       "use strict";
-      const APP_VERSION = "1.1.0";
+      const APP_VERSION = "1.2.0";
+      const SUBMISSION_ENDPOINT = "https://script.google.com/macros/s/AKfycbyXMDX2TCxm_2ttXvgnVdtCUf3H_VeR-2LOXo2J7MC3qEZ1PkAIAhf5L5IfstkdlqTB/exec";
+      const SUBMISSION_TOKEN = "llb-7f28dca4e9c041dfa36e2bb15c9477e2";
       const params = new URLSearchParams(location.search);
       const config = {
         projectId: params.get("project") || "",
@@ -254,13 +256,13 @@
         $("#missing").className = "missing" + (missing.length ? "" : " ok");
         $("#missing").innerHTML = missing.length ? `<strong>Queden ${missing.length} dades per completar:</strong><ul>${missing.map(item => `<li>${html(item)}</li>`).join("")}</ul>` : "<strong>La informació obligatòria està completa.</strong>";
         $("#send").disabled = !connected || missing.length > 0;
-        $("#send").title = connected ? (missing.length ? "Completa les dades obligatòries" : "") : "Obre el formulari des de l’Studio per enviar-lo";
+        $("#send").title = connected ? (missing.length ? "Completa les dades obligatòries" : "") : "Utilitza l’enllaç municipal creat des de l’Studio per enviar-lo";
       };
       const showStep = (nextStep) => {
         step = Math.max(0, Math.min(3, nextStep));
         $$(".page").forEach((node,index) => node.hidden = index !== step);
         $$(".step-button").forEach((node,index) => { node.classList.toggle("active", index === step); node.classList.toggle("done", index < step); });
-        const titles = [["Informació del programa","Completa les dades bàsiques del PMII i de l’àrea d’atenció especial."],["Planificació municipal","Indica els instruments vigents i l’experiència municipal vinculada a l’AAE."],["Dades bancàries","Informa el compte municipal destinat al pagament del Fons."],["Revisió i enviament","Revisa el contingut i crea una nova versió a l’Studio."]];
+        const titles = [["Informació del programa","Completa les dades bàsiques del PMII i de l’àrea d’atenció especial."],["Planificació municipal","Indica els instruments vigents i l’experiència municipal vinculada a l’AAE."],["Dades bancàries","Informa el compte municipal destinat al pagament del Fons."],["Revisió i enviament","Revisa el contingut abans d’enviar-lo a iServeis i a l’Studio."]];
         $("#page-title").textContent = titles[step][0]; $("#page-description").textContent = titles[step][1];
         $("#summary").textContent = `Pas ${step + 1} de 4`;
         $("#previous").hidden = step === 0; $("#next").hidden = step === 3; $("#print").hidden = step !== 3; $("#send").hidden = step !== 3;
@@ -296,24 +298,73 @@
           data = normalizeData(parsed); fillForm(); saveLocal(); showStep(0); toast("S’han importat les dades.");
         } catch { toast("El fitxer JSON no és vàlid.",true); }
       };
+      const requestSubmissionStatus = (submissionId) => new Promise((resolve,reject) => {
+        const callbackName = "llbAnnexStatus_" + String(submissionId).replace(/[^a-zA-Z0-9_]/g,"");
+        const script = document.createElement("script");
+        const timer = setTimeout(() => {
+          delete window[callbackName];
+          script.remove();
+          reject(new Error("No s’ha pogut confirmar l’enviament."));
+        },10000);
+        window[callbackName] = (result) => {
+          clearTimeout(timer);
+          delete window[callbackName];
+          script.remove();
+          resolve(result || {});
+        };
+        script.onerror = () => {
+          clearTimeout(timer);
+          delete window[callbackName];
+          script.remove();
+          reject(new Error("No s’ha pogut consultar l’estat de l’enviament."));
+        };
+        script.src = SUBMISSION_ENDPOINT + "?status=" + encodeURIComponent(submissionId) + "&token=" + encodeURIComponent(SUBMISSION_TOKEN) + "&callback=" + encodeURIComponent(callbackName) + "&_=" + Date.now();
+        document.head.appendChild(script);
+      });
+      const waitForSubmissionStatus = async (submissionId, attempts = 8) => {
+        const result = await requestSubmissionStatus(submissionId);
+        if (result.pending && attempts > 1) {
+          await new Promise(resolve => setTimeout(resolve,1200));
+          return waitForSubmissionStatus(submissionId,attempts - 1);
+        }
+        return result;
+      };
       const sendStudio = async () => {
         const missing = missingFields(); if (missing.length || !connected) { renderReview(); return; }
         const button = $("#send"); button.disabled = true; button.textContent = "Enviant…";
         try {
-          const submissionId = crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
-          const result = await studioFetch(config.studioApi,{method:"POST",body:JSON.stringify({
-            action:"syncModule", projectId:config.projectId, moduleKey:"annex", status:"complet",
-            itemCount:3 + planDefinitions.length, warningCount:0, summary:`Annex PMII complet · ${data.aaeName}`,
-            source:"Formulari Annex PMII v" + APP_VERSION, data, externalSubmissionId:submissionId,
-            versionLabel:`Annex PMII · ${new Intl.DateTimeFormat("ca-ES",{dateStyle:"short",timeStyle:"short"}).format(new Date())}`,
-            submissionType:"annex_pmii"
-          })});
-          const synced = result.syncedVersion;
-          toast(synced ? `Versió ${synced.versionNumber} creada a l’Studio.` : "S’ha enviat a l’Studio.");
+          saveLocal();
+          const submissionId = "annex-" + (crypto.randomUUID ? crypto.randomUUID().replace(/-/g,"").slice(0,20) : `${Date.now()}${Math.random().toString(16).slice(2)}`);
+          const payload = {
+            schema:"iserveis-llb-annex-submission",
+            version:1,
+            submissionId,
+            submittedAt:new Date().toISOString(),
+            formBuild:APP_VERSION,
+            recipient:"suport2@iserveis.cat",
+            project:{
+              id:config.projectId,
+              name:data.project.name || config.projectName,
+              municipalityCode:data.project.municipalityCode || config.municipalityCode
+            },
+            annex:data,
+            studioApi:config.studioApi,
+            studioSession:config.studioSession
+          };
+          await fetch(SUBMISSION_ENDPOINT,{
+            method:"POST",
+            mode:"no-cors",
+            headers:{"content-type":"text/plain;charset=utf-8"},
+            body:JSON.stringify(payload)
+          });
+          const result = await waitForSubmissionStatus(submissionId);
+          if (!result.ok) throw new Error(result.error || "No s’ha pogut completar l’enviament.");
+          const synced = result.studio?.syncedVersion;
+          toast(synced ? `Enviat a iServeis i incorporat com a versió ${synced.versionNumber} de l’Studio.` : "Enviat a iServeis i incorporat a l’Studio.");
           if (config.studioOrigin && window.opener) window.opener.postMessage({type:"LLB_STUDIO_REFRESH",projectId:config.projectId,moduleKey:"annex",source:"Formulari Annex PMII"},config.studioOrigin);
           await loadStudioVersion();
         } catch (error) { toast(error instanceof Error ? error.message : "No s’ha pogut enviar.",true); }
-        finally { button.disabled = false; button.textContent = "Enviar a Studio"; renderReview(); }
+        finally { button.disabled = false; button.textContent = "Enviar a iServeis"; renderReview(); }
       };
 
       renderPlanInputs();

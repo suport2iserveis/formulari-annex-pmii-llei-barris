@@ -2,7 +2,7 @@
 
 Repositori web estàtic del formulari de l’annex de la sol·licitud del PMII.
 Funciona de manera independent a GitHub Pages i també connectat amb
-**Studio Llei de Barris 3.8.2**.
+**Studio Llei de Barris 3.9.0**.
 
 ## Funcions
 
@@ -12,9 +12,12 @@ Funciona de manera independent a GitHub Pages i també connectat amb
 - revisió abans de l’enviament;
 - identitat visual integrada d’iServeis i Barry;
 - importació i exportació JSON;
-- impressió o desament del resum en PDF;
+- impressió o desament local del resum en PDF;
 - càrrega automàtica de la versió actual de l’Studio;
-- creació d’una versió nova i immutable a l’Studio.
+- botó `Enviar a iServeis`;
+- enviament automàtic d’un PDF a `suport2@iserveis.cat`;
+- creació simultània d’una versió nova i immutable a l’Studio;
+- enllaç municipal específic, creat des de `Documents EACAT`.
 
 ## Publicació a GitHub Pages
 
@@ -27,7 +30,7 @@ L’adreça prevista és:
 
 `https://suport2iserveis.github.io/formulari-annex-pmii-llei-barris/`
 
-L’Studio 3.8.0 ja utilitza aquesta adreça.
+L’Studio 3.9.0 ja utilitza aquesta adreça.
 
 ## Connexió amb l’Studio
 
@@ -36,10 +39,23 @@ L’Studio obre el formulari amb:
 - l’identificador i el nom del projecte;
 - el codi municipal;
 - l’adreça de l’API de l’Studio;
-- una sessió temporal vinculada al projecte.
+- una sessió municipal vinculada exclusivament al projecte.
 
-La sessió caduca al cap de 12 hores. No hi ha cap clau privada dins del
-repositori públic. Cada enviament crea una versió nova del mòdul `annex`.
+L’enllaç municipal es crea des de `Documents EACAT` i caduca al cap d’un any.
+No hi ha cap clau privada dins del repositori públic. Cada enviament crea una
+versió nova del mòdul `annex`, genera un PDF i l’envia a
+`suport2@iserveis.cat`.
+
+## Activació de l’enviament
+
+El fitxer `google-apps-script.gs` és la versió 12 del receptor unificat. Copieu
+tot el seu contingut al projecte de Google Apps Script que ja utilitza el
+Formulari de fitxes i torneu a desplegar la mateixa aplicació web com una versió
+nova. Mantingueu l’URL `/exec` existent: el formulari ja la porta configurada.
+
+La primera vegada, Google demanarà autorització per enviar correus i crear
+temporalment el document utilitzat per generar el PDF. El document temporal
+s’elimina automàticament després de convertir-lo.
 
 ## Prova
 
