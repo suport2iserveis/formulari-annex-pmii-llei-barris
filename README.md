@@ -1,12 +1,12 @@
-# Formulari Annex PMII · Llei de Barris · versió 1.2.2
+# Formulari Annex PMII · Llei de Barris · versió 1.2.3
 
 Repositori web estàtic del formulari de l’annex de la sol·licitud del PMII.
 Funciona de manera independent a GitHub Pages i també connectat amb
-**Studio Llei de Barris 3.9.3**.
+**Studio Llei de Barris 3.9.8**.
 
-La versió 1.2.2 mostra a la primera plana el municipi vinculat pel projecte
-de l’Studio i envia el token del receptor de manera explícita. Cal tornar a
-publicar `google-apps-script.gs` com una versió nova del mateix desplegament.
+La versió 1.2.3 amplia el temps de confirmació de l’enviament i evita mostrar
+un fals error quan el receptor encara està acabant de generar el PDF, enviar
+el correu o confirmar la versió creada a l’Studio.
 
 ## Funcions
 
@@ -34,7 +34,7 @@ L’adreça prevista és:
 
 `https://suport2iserveis.github.io/formulari-annex-pmii-llei-barris/`
 
-L’Studio 3.9.3 ja utilitza aquesta adreça.
+L’Studio 3.9.8 ja utilitza aquesta adreça.
 
 ## Connexió amb l’Studio
 
@@ -52,10 +52,10 @@ versió nova del mòdul `annex`, genera un PDF i l’envia a
 
 ## Activació de l’enviament
 
-El fitxer `google-apps-script.gs` és la versió 14 del receptor unificat. Copieu
-tot el seu contingut al projecte de Google Apps Script que ja utilitza el
-Formulari de fitxes i torneu a desplegar la mateixa aplicació web com una versió
-nova. Mantingueu l’URL `/exec` existent: el formulari ja la porta configurada.
+El fitxer `google-apps-script.gs` continua sent la versió 14 del receptor
+unificat. Si ja vau publicar la v14 amb la versió anterior, no cal tornar a
+modificar ni desplegar Google Apps Script. Mantingueu l’URL `/exec` existent:
+el formulari ja la porta configurada.
 
 La primera vegada, Google demanarà autorització per enviar correus. El PDF es
 genera directament en memòria i no requereix permisos per crear documents ni

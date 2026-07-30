@@ -77,6 +77,13 @@ test("envia a iServeis amb PDF i sincronització municipal", async () => {
   assert.doesNotMatch(receiver, /DocumentApp\.|DriveApp\./);
 });
 
+test("no mostra un fals error mentre l’enviament confirmat continua processant-se", () => {
+  assert.match(html, /waitForSubmissionStatus = async \(submissionId, attempts = 40\)/);
+  assert.match(html, /if \(result\.pending\)/);
+  assert.match(html, /L’enviament s’ha transmès i continua processant-se/);
+  assert.match(html, /try \{ await loadStudioVersion\(\); \} catch \{\}/);
+});
+
 test("genera un PDF binari vàlid sense serveis de Documents o Drive", () => {
   const sandbox = {
     Utilities: {

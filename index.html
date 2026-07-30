@@ -130,7 +130,7 @@
   <script>
     (() => {
       "use strict";
-      const APP_VERSION = "1.2.2";
+      const APP_VERSION = "1.2.3";
       const SUBMISSION_ENDPOINT = "https://script.google.com/macros/s/AKfycbyXMDX2TCxm_2ttXvgnVdtCUf3H_VeR-2LOXo2J7MC3qEZ1PkAIAhf5L5IfstkdlqTB/exec";
       const SUBMISSION_TOKEN = "llb-7f28dca4e9c041dfa36e2bb15c9477e2";
       const params = new URLSearchParams(location.search);
@@ -339,10 +339,10 @@
         script.src = SUBMISSION_ENDPOINT + "?status=" + encodeURIComponent(submissionId) + "&token=" + encodeURIComponent(SUBMISSION_TOKEN) + "&callback=" + encodeURIComponent(callbackName) + "&_=" + Date.now();
         document.head.appendChild(script);
       });
-      const waitForSubmissionStatus = async (submissionId, attempts = 8) => {
+      const waitForSubmissionStatus = async (submissionId, attempts = 40) => {
         const result = await requestSubmissionStatus(submissionId);
         if (result.pending && attempts > 1) {
-          await new Promise(resolve => setTimeout(resolve,1200));
+          await new Promise(resolve => setTimeout(resolve,1500));
           return waitForSubmissionStatus(submissionId,attempts - 1);
         }
         return result;
@@ -377,7 +377,17 @@
             headers:{"content-type":"text/plain;charset=utf-8"},
             body:JSON.stringify(payload)
           });
-          const result = await waitForSubmissionStatus(submissionId);
+          let result;
+          try {
+            result = await waitForSubmissionStatus(submissionId);
+          } catch (confirmationError) {
+            toast("L’enviament s’ha transmès i continua processant-se. No el tornis a enviar: comprova l’Studio i el correu d’aquí a uns instants.");
+            return;
+          }
+          if (result.pending) {
+            toast("L’enviament s’ha transmès i continua processant-se. No el tornis a enviar: comprova l’Studio i el correu d’aquí a uns instants.");
+            return;
+          }
           if (!result.ok) {
             const message = result.error === "Sol·licitud no autoritzada."
               ? "El receptor d’enviaments publicat és anterior al Formulari Annex PMII. Actualitza i torna a desplegar el fitxer google-apps-script.gs inclòs amb aquesta versió."
@@ -387,7 +397,7 @@
           const synced = result.studio?.syncedVersion;
           toast(synced ? `Enviat a iServeis i incorporat com a versió ${synced.versionNumber} de l’Studio.` : "Enviat a iServeis i incorporat a l’Studio.");
           if (config.studioOrigin && window.opener) window.opener.postMessage({type:"LLB_STUDIO_REFRESH",projectId:config.projectId,moduleKey:"annex",source:"Formulari Annex PMII"},config.studioOrigin);
-          await loadStudioVersion();
+          try { await loadStudioVersion(); } catch {}
         } catch (error) { toast(error instanceof Error ? error.message : "No s’ha pogut enviar.",true); }
         finally { button.disabled = false; button.textContent = "Enviar a iServeis"; renderReview(); }
       };
