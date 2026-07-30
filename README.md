@@ -1,8 +1,12 @@
-# Formulari Annex PMII · Llei de Barris
+# Formulari Annex PMII · Llei de Barris · versió 1.2.1
 
 Repositori web estàtic del formulari de l’annex de la sol·licitud del PMII.
 Funciona de manera independent a GitHub Pages i també connectat amb
-**Studio Llei de Barris 3.9.0**.
+**Studio Llei de Barris 3.9.3**.
+
+La versió 1.2.1 mostra a la primera plana el municipi vinculat pel projecte
+de l’Studio i envia el token del receptor de manera explícita. Cal tornar a
+publicar `google-apps-script.gs` com una versió nova del mateix desplegament.
 
 ## Funcions
 
@@ -30,7 +34,7 @@ L’adreça prevista és:
 
 `https://suport2iserveis.github.io/formulari-annex-pmii-llei-barris/`
 
-L’Studio 3.9.0 ja utilitza aquesta adreça.
+L’Studio 3.9.3 ja utilitza aquesta adreça.
 
 ## Connexió amb l’Studio
 

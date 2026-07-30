@@ -25,8 +25,16 @@ test("conserva el contracte segur amb l’Studio", () => {
   assert.match(html, /iserveis-llb-annex-submission/);
   assert.match(html, /SUBMISSION_ENDPOINT/);
   assert.match(html, /requestSubmissionStatus/);
+  assert.match(html, /token:SUBMISSION_TOKEN/);
   assert.match(html, /LLB_STUDIO_REFRESH/);
   assert.doesNotMatch(html, /STUDIO_SYNC_KEY/);
+});
+
+test("mostra el municipi vinculat a la primera plana", () => {
+  assert.match(html, /id="municipality-name"/);
+  assert.match(html, /Municipi vinculat/);
+  assert.match(html, /params\.get\("municipality"\)/);
+  assert.match(html, /municipality:data\.project\.municipality/);
 });
 
 test("inclou desament local, JSON, impressió i requisit de 22 dígits", () => {
@@ -60,6 +68,8 @@ test("envia a iServeis amb PDF i sincronització municipal", async () => {
   assert.match(receiver, /sendAnnexEmail_/);
   assert.match(receiver, /moduleKey: 'annex'/);
   assert.match(receiver, /'X-Studio-Session': studioSession/);
+  assert.match(receiver, /payload\.token !== LLB_CONFIG\.TOKEN/);
+  assert.match(receiver, /SERVICE_VERSION: 13/);
 });
 
 test("l’script principal té sintaxi JavaScript vàlida", () => {

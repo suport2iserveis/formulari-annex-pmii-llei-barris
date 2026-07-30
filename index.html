@@ -29,6 +29,7 @@
     .step-button.active{color:var(--blue-dark)}.step-button.active:before{background:var(--barry);box-shadow:inset 0 0 0 6px var(--barry-soft)}
     .step-button.done{color:var(--ok)}.step-button.done:before,.step-button.done:after{background:var(--ok)}
     main{padding:20px 34px 34px}.intro{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:1px solid var(--line);padding:0 0 18px;margin-bottom:22px;gap:20px}.intro h2{margin:0;font-size:24px}.intro p{margin:5px 0 0;color:var(--muted)}
+    .municipality-banner{display:flex;align-items:center;justify-content:space-between;gap:18px;margin:0 0 18px;padding:15px 18px;border:1px solid #c9c7e5;border-radius:14px;background:linear-gradient(100deg,#f8f7ff,#ecebfb);box-shadow:0 5px 16px #2928370a}.municipality-banner span{display:block;color:#6b6993;font-size:11px;font-weight:750;letter-spacing:.08em;text-transform:uppercase}.municipality-banner strong{display:block;margin-top:2px;color:var(--barry-dark);font-size:19px}.municipality-banner small{color:var(--muted);text-align:right}
     .save-state{color:var(--ok);font-size:13px;font-weight:650;text-align:right}.save-state.warn{color:var(--warn)}
     .studio-bar{display:flex;align-items:flex-end;gap:12px;padding:14px 16px;margin-bottom:18px;border:1px solid #b9d8e7;border-radius:10px;background:var(--sky)}
     .studio-bar label{flex:1;font-size:13px;font-weight:700}.studio-bar select{margin-top:5px}
@@ -46,7 +47,7 @@
     .footer{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:25px}.required{color:#c63e52}.actions{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:8px}.btn{border-radius:10px;padding:11px 16px;font-weight:700;border:1px solid var(--barry);background:#fff;color:var(--blue-dark)}.btn:hover{background:#f3f2ff}.btn.primary{background:var(--barry-dark);border-color:var(--barry-dark);color:#fff}.btn.primary:hover{background:#42405c}.btn.subtle{border-color:#bbb9cd;color:#5e5c72}.summary{font-size:13px;color:var(--muted)}
     .toast{position:fixed;left:50%;bottom:25px;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#173d58;color:#fff;padding:11px 16px;border-radius:8px;box-shadow:0 10px 30px #102c4050;transition:.2s;z-index:10}.toast.show{opacity:1;transform:translate(-50%,0)}.toast.error{background:#9c3030}
     .visually-hidden{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
-    @media(max-width:760px){.shell{margin:0;border-radius:0}.grid,.plans,.review-grid{grid-template-columns:1fr}header,main{padding-left:18px;padding-right:18px}.progress{padding-left:18px;padding-right:18px}.intro,.footer{align-items:stretch;flex-direction:column}.brand{gap:10px}.iserveis-link{width:105px;height:56px;padding:6px}.brand-copy{padding-left:10px}.brand h1{font-size:17px}.barry-signature{display:none}.connection{text-align:left}.review-card.full{grid-column:auto}.step-button{font-size:0}.step-button:after{display:block}.actions{justify-content:flex-start}}
+    @media(max-width:760px){.shell{margin:0;border-radius:0}.grid,.plans,.review-grid{grid-template-columns:1fr}header,main{padding-left:18px;padding-right:18px}.progress{padding-left:18px;padding-right:18px}.intro,.footer,.municipality-banner{align-items:stretch;flex-direction:column}.municipality-banner small{text-align:left}.brand{gap:10px}.iserveis-link{width:105px;height:56px;padding:6px}.brand-copy{padding-left:10px}.brand h1{font-size:17px}.barry-signature{display:none}.connection{text-align:left}.review-card.full{grid-column:auto}.step-button{font-size:0}.step-button:after{display:block}.actions{justify-content:flex-start}}
     @media print{body{background:#fff}.shell{margin:0;box-shadow:none}.progress,.studio-bar,.footer,.save-state,.connection{display:none!important}.page{display:none!important}#page-review{display:block!important}main{padding:10px}.review-card{break-inside:avoid}}
   </style>
 </head>
@@ -69,6 +70,7 @@
       <div class="intro"><div><h2 id="page-title">Informació del programa</h2><p id="page-description">Completa les dades bàsiques del PMII i de l’àrea d’atenció especial.</p></div><div class="save-state" id="save-state">● Esborrany desat automàticament</div></div>
       <form id="annex-form" novalidate>
         <section class="page" id="page-general" data-page="0">
+          <div class="municipality-banner"><div><span>Municipi vinculat</span><strong id="municipality-name">Enllaç no vinculat a cap municipi</strong></div><small id="municipality-code"></small></div>
           <section class="card"><div class="card-head"><div class="number">1</div><div><h3>Identificació del programa</h3><span>Dades bàsiques del PMII i de l’àrea d’atenció especial</span></div></div>
             <div class="card-body"><div class="grid">
               <div class="field" data-field="pmiiTitle"><label for="pmiiTitle">Títol del programa memòria d’intervenció integral (PMII) <span class="required">*</span></label><input id="pmiiTitle" name="pmiiTitle" class="input" autocomplete="off" placeholder="Ex.: PMII de transformació urbana del…"><p class="field-error">Cal indicar el títol del PMII.</p></div>
@@ -128,13 +130,14 @@
   <script>
     (() => {
       "use strict";
-      const APP_VERSION = "1.2.0";
+      const APP_VERSION = "1.2.1";
       const SUBMISSION_ENDPOINT = "https://script.google.com/macros/s/AKfycbyXMDX2TCxm_2ttXvgnVdtCUf3H_VeR-2LOXo2J7MC3qEZ1PkAIAhf5L5IfstkdlqTB/exec";
       const SUBMISSION_TOKEN = "llb-7f28dca4e9c041dfa36e2bb15c9477e2";
       const params = new URLSearchParams(location.search);
       const config = {
         projectId: params.get("project") || "",
         projectName: params.get("projectName") || "",
+        municipality: params.get("municipality") || params.get("projectName") || "",
         municipalityCode: params.get("municipalityCode") || "",
         studioApi: params.get("studioApi") || "",
         studioSession: params.get("studioSession") || "",
@@ -151,7 +154,7 @@
       const emptyData = () => ({
         schemaVersion: 1,
         formVersion: APP_VERSION,
-        project: { id: config.projectId, name: config.projectName, municipalityCode: config.municipalityCode },
+        project: { id: config.projectId, name: config.projectName, municipality: config.municipality, municipalityCode: config.municipalityCode },
         pmiiTitle: "", aaeName: "", urbanAgenda: "", plans: Object.fromEntries(planDefinitions.map(([key]) => [key,""])),
         similarExperience: "", iban: "", updatedAt: new Date().toISOString()
       });
@@ -175,7 +178,14 @@
         const incomingPlans = incoming.plans && typeof incoming.plans === "object" ? incoming.plans : {};
         return {
           ...base, ...incoming,
-          project: { ...base.project, ...(incoming.project || {}) },
+          project: {
+            ...base.project,
+            ...(incoming.project || {}),
+            id: config.projectId || incoming.project?.id || "",
+            name: config.projectName || incoming.project?.name || "",
+            municipality: config.municipality || incoming.project?.municipality || incoming.project?.name || "",
+            municipalityCode: config.municipalityCode || incoming.project?.municipalityCode || ""
+          },
           plans: Object.fromEntries(planDefinitions.map(([key]) => [key, ["si","no"].includes(incomingPlans[key]) ? incomingPlans[key] : ""])),
           pmiiTitle: textValue(incoming.pmiiTitle), aaeName: textValue(incoming.aaeName),
           urbanAgenda: ["si","no"].includes(incoming.urbanAgenda) ? incoming.urbanAgenda : "",
@@ -192,6 +202,8 @@
           </div></div>`).join("");
       };
       const fillForm = () => {
+        $("#municipality-name").textContent = data.project.municipality || data.project.name || "Enllaç no vinculat a cap municipi";
+        $("#municipality-code").textContent = data.project.municipalityCode ? `Codi municipal: ${data.project.municipalityCode}` : "";
         $("#pmiiTitle").value = data.pmiiTitle;
         $("#aaeName").value = data.aaeName;
         $("#urbanAgenda").value = data.urbanAgenda;
@@ -212,7 +224,13 @@
         planDefinitions.forEach(([key]) => {
           data.plans[key] = document.querySelector(`input[name="plan-${key}"]:checked`)?.value || "";
         });
-        data.project = { ...data.project, id: config.projectId || data.project.id, name: config.projectName || data.project.name, municipalityCode: config.municipalityCode || data.project.municipalityCode };
+        data.project = {
+          ...data.project,
+          id: config.projectId || data.project.id,
+          name: config.projectName || data.project.name,
+          municipality: config.municipality || data.project.municipality || data.project.name,
+          municipalityCode: config.municipalityCode || data.project.municipalityCode
+        };
         data.updatedAt = new Date().toISOString();
         return data;
       };
@@ -249,7 +267,7 @@
       };
       const renderReview = () => {
         readForm();
-        $("#review-program").innerHTML = `<dt>Projecte Studio</dt><dd>${html(data.project.name || "No vinculat")}</dd><dt>Títol PMII</dt><dd>${html(data.pmiiTitle || "—")}</dd><dt>AAE</dt><dd>${html(data.aaeName || "—")}</dd><dt>Agenda Urbana</dt><dd>${yesNo(data.urbanAgenda)}</dd>`;
+        $("#review-program").innerHTML = `<dt>Municipi</dt><dd>${html(data.project.municipality || data.project.name || "No vinculat")}</dd><dt>Projecte Studio</dt><dd>${html(data.project.name || "No vinculat")}</dd><dt>Títol PMII</dt><dd>${html(data.pmiiTitle || "—")}</dd><dt>AAE</dt><dd>${html(data.aaeName || "—")}</dd><dt>Agenda Urbana</dt><dd>${yesNo(data.urbanAgenda)}</dd>`;
         $("#review-plans").innerHTML = planDefinitions.map(([key,label]) => `<dt>${html(label)}</dt><dd>${yesNo(data.plans[key])}</dd>`).join("") + `<dt>Experiència</dt><dd>${html(data.similarExperience || "—")}</dd>`;
         $("#review-other").innerHTML = `<dt>IBAN</dt><dd>${data.iban ? "ES•••• •••• •••• •••• " + html(data.iban.slice(-4)) : "—"}</dd>`;
         const missing = missingFields();
@@ -336,6 +354,7 @@
           saveLocal();
           const submissionId = "annex-" + (crypto.randomUUID ? crypto.randomUUID().replace(/-/g,"").slice(0,20) : `${Date.now()}${Math.random().toString(16).slice(2)}`);
           const payload = {
+            token:SUBMISSION_TOKEN,
             schema:"iserveis-llb-annex-submission",
             version:1,
             submissionId,
@@ -345,6 +364,7 @@
             project:{
               id:config.projectId,
               name:data.project.name || config.projectName,
+              municipality:data.project.municipality || config.municipality || data.project.name || config.projectName,
               municipalityCode:data.project.municipalityCode || config.municipalityCode
             },
             annex:data,
@@ -358,7 +378,12 @@
             body:JSON.stringify(payload)
           });
           const result = await waitForSubmissionStatus(submissionId);
-          if (!result.ok) throw new Error(result.error || "No s’ha pogut completar l’enviament.");
+          if (!result.ok) {
+            const message = result.error === "Sol·licitud no autoritzada."
+              ? "El receptor d’enviaments publicat és anterior al Formulari Annex PMII. Actualitza i torna a desplegar el fitxer google-apps-script.gs inclòs amb aquesta versió."
+              : result.error;
+            throw new Error(message || "No s’ha pogut completar l’enviament.");
+          }
           const synced = result.studio?.syncedVersion;
           toast(synced ? `Enviat a iServeis i incorporat com a versió ${synced.versionNumber} de l’Studio.` : "Enviat a iServeis i incorporat a l’Studio.");
           if (config.studioOrigin && window.opener) window.opener.postMessage({type:"LLB_STUDIO_REFRESH",projectId:config.projectId,moduleKey:"annex",source:"Formulari Annex PMII"},config.studioOrigin);
