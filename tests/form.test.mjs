@@ -4,6 +4,10 @@ import test from "node:test";
 import vm from "node:vm";
 
 const html = await readFile(new URL("../index.html", import.meta.url), "utf8");
+const receiver = await readFile(
+  new URL("../google-apps-script.gs", import.meta.url),
+  "utf8",
+);
 
 test("conté els quatre passos i tots els camps de la proposta", () => {
   for (const text of [
@@ -62,14 +66,41 @@ test("mou l’experiència al resum de planificació i elimina la casella de ver
 test("envia a iServeis amb PDF i sincronització municipal", async () => {
   assert.match(html, /Enviar a iServeis/);
   assert.match(html, /suport2@iserveis\.cat/);
-  const receiver = await readFile(new URL("../google-apps-script.gs", import.meta.url), "utf8");
   assert.match(receiver, /createAnnexPdf_/);
-  assert.match(receiver, /MimeType\.PDF/);
+  assert.match(receiver, /createSimplePdfBlob_/);
+  assert.match(receiver, /application\/pdf/);
   assert.match(receiver, /sendAnnexEmail_/);
   assert.match(receiver, /moduleKey: 'annex'/);
   assert.match(receiver, /'X-Studio-Session': studioSession/);
   assert.match(receiver, /payload\.token !== LLB_CONFIG\.TOKEN/);
-  assert.match(receiver, /SERVICE_VERSION: 13/);
+  assert.match(receiver, /SERVICE_VERSION: 14/);
+  assert.doesNotMatch(receiver, /DocumentApp\.|DriveApp\./);
+});
+
+test("genera un PDF binari vàlid sense serveis de Documents o Drive", () => {
+  const sandbox = {
+    Utilities: {
+      newBlob(bytes, mimeType, fileName) {
+        return { bytes, mimeType, fileName };
+      },
+    },
+  };
+  vm.runInNewContext(receiver, sandbox);
+  const blob = sandbox.createSimplePdfBlob_(
+    [
+      { text: "ANNEX PMII · LLEI DE BARRIS", size: 18, bold: true },
+      {
+        text: "Municipi: Caldes de Montbui. Experiència d’acció comunitària i planificació.",
+        size: 10,
+      },
+    ],
+    "annex-prova.pdf",
+  );
+  const pdf = Buffer.from(blob.bytes);
+  assert.equal(blob.mimeType, "application/pdf");
+  assert.equal(blob.fileName, "annex-prova.pdf");
+  assert.equal(pdf.subarray(0, 8).toString("ascii"), "%PDF-1.4");
+  assert.match(pdf.toString("latin1"), /xref[\s\S]*startxref[\s\S]*%%EOF$/);
 });
 
 test("l’script principal té sintaxi JavaScript vàlida", () => {
